@@ -13,39 +13,46 @@ class AnalysisService:
             raise ValueError("Gemini API Key is required")
         
         genai.configure(api_key=api_key)
-        # gemini-pro가 deprecated 되었거나 404 에러 발생 시 gemini-1.5-flash 사용
-        self.model = genai.GenerativeModel('gemini-1.5-flash')
+        # 사용 가능한 모델 목록 (우선순위 순)
+        self.models = ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-pro']
+        self.current_model_name = self.models[0]
+        self.model = genai.GenerativeModel(self.current_model_name)
 
     async def generate_report(self, market_data: dict, news_data: list, youtube_data: list, report_type: str = "bullish") -> str:
         """
         제공된 데이터와 타입을 기반으로 투자 리포트를 생성합니다.
+        여러 모델을 시도하여 성공할 때까지 반복합니다.
         report_type: 'bullish' (낙관적) 또는 'bearish' (비관적)
         """
-        try:
-            # 프롬프트 템플릿 선택
-            if report_type.lower() == "bullish":
-                prompt_template = BULLISH_PROMPT_TEMPLATE
-            elif report_type.lower() == "bearish":
-                prompt_template = BEARISH_PROMPT_TEMPLATE
-            else:
-                raise ValueError("Invalid report type. Use 'bullish' or 'bearish'.")
+        prompt_template = ""
+        if report_type.lower() == "bullish":
+            prompt_template = BULLISH_PROMPT_TEMPLATE
+        elif report_type.lower() == "bearish":
+            prompt_template = BEARISH_PROMPT_TEMPLATE
+        else:
+            return "Error: Invalid report type."
 
-            # 컨텍스트 준비
-            context = prompt_template.format(
-                market_data=str(market_data)[:5000],  # 너무 길 경우 자름 (대략적인 제한)
-                news_data=str(news_data)[:3000],
-                youtube_data=str(youtube_data)[:3000]
-            )
+        context = prompt_template.format(
+            market_data=str(market_data)[:10000], 
+            news_data=str(news_data)[:5000],
+            youtube_data=str(youtube_data)[:3000]
+        )
 
-            # 콘텐츠 생성
-            logger.info(f"Generating {report_type} report...")
-            response = self.model.generate_content(context)
-            
-            return response.text
+        last_error = None
 
-        except Exception as e:
-            logger.error(f"Error generating report: {e}")
-            return f"Error generating report: {e}"
+        for model_name in self.models:
+            try:
+                logger.info(f"Generating {report_type} report using {model_name}...")
+                model = genai.GenerativeModel(model_name)
+                response = model.generate_content(context)
+                return response.text
+            except Exception as e:
+                logger.warning(f"Failed with {model_name}: {e}")
+                last_error = e
+                continue
+        
+        logger.error(f"All models failed. Last error: {last_error}")
+        return f"Error generation report (All models failed): {last_error}"
 
 # 싱글톤 인스턴스 플레이스홀더
 analysis_service = None
