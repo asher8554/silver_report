@@ -19,11 +19,20 @@ def collect_market_data(period="7d", interval="1h"):
             # 최적화: 가능하다면 한 번에 가져오는 것이 좋지만, 에러 처리를 위해 개별적으로 가져오는 것이 안전함
             df = yf.download(ticker, period=period, interval=interval, progress=False)
             if not df.empty:
+                # yfinance 최신 버전에서 MultiIndex 컬럼이 반환될 수 있음 -> 평탄화
+                if isinstance(df.columns, pd.MultiIndex):
+                    df.columns = df.columns.get_level_values(0)
+
                 # 딕셔너리 리스트 또는 JSON 직렬화 가능한 형식으로 저장
                 # 인덱스를 리셋하여 'Date'를 컬럼으로 만듦
                 df.reset_index(inplace=True)
+                
                 # 타임스탬프를 문자열로 변환
-                df['Datetime'] = df['Datetime'].astype(str) if 'Datetime' in df.columns else df['Date'].astype(str)
+                # 컬럼 이름이 Date 또는 Datetime인지 확인
+                date_col = 'Datetime' if 'Datetime' in df.columns else 'Date'
+                if date_col in df.columns:
+                    df[date_col] = df[date_col].astype(str)
+                
                 data[name] = df.to_dict(orient='records')
             else:
                 print(f"Warning: No data found for {name}")
