@@ -3,7 +3,7 @@ from urllib.parse import urlparse, parse_qs
 
 def get_video_id(url):
     """
-    Extracts video ID from a YouTube URL.
+    유튜브 URL에서 비디오 ID를 추출합니다.
     """
     query = urlparse(url)
     if query.hostname == 'youtu.be':
@@ -20,7 +20,7 @@ def get_video_id(url):
 
 def collect_youtube_transcript(video_url):
     """
-    Fetches transcript for a given YouTube video URL.
+    주어진 유튜브 비디오 URL에 대한 자막(스크립트)을 가져옵니다.
     """
     video_id = get_video_id(video_url)
     if not video_id:
@@ -29,12 +29,12 @@ def collect_youtube_transcript(video_url):
 
     try:
         transcript_list = YouTubeTranscriptApi.get_transcript(video_id)
-        # Combine transcript into a single string
+        # 자막을 하나의 문자열로 결합
         full_text = " ".join([t['text'] for t in transcript_list])
         return full_text
     except Exception as e:
         print(f"Error fetching transcript for {video_url}: {e}")
-        # Investigate specific error types here if needed (e.g. key error)
+        # 필요한 경우 특정 에러 타입(예: 키 에러)을 여기서 조사
         return None
 
 if __name__ == "__main__":

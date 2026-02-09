@@ -26,6 +26,7 @@ However, remain logical and grounded in the data. Do not hallucinate.
 ## 3. 결론 및 목표가 시나리오
 (Conclusion...)
 """
+# AI 모델에 전달할 낙관적 리포트 생성 프롬프트 템플릿입니다.
 
 BEARISH_PROMPT_TEMPLATE = """
 You are a conservative risk manager and investment analyst specializing in Silver (SLV), Gold, and Bitcoin.
@@ -55,3 +56,4 @@ Identify potential traps and reasons to sell or hold cash.
 ## 3. 결론 및 관망/매도 전략
 (Conclusion...)
 """
+# AI 모델에 전달할 비관적 리포트 생성 프롬프트 템플릿입니다.

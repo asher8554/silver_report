@@ -5,6 +5,10 @@ import { api, ReportData } from '@/lib/api';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { ArrowUpCircle, ArrowDownCircle, RefreshCw, TrendingUp, TrendingDown, Clock } from 'lucide-react';
 
+/**
+ * 실버 리포트의 메인 페이지 컴포넌트입니다.
+ * 리포트 데이터를 가져와 차트와 텍스트로 보여줍니다.
+ */
 export default function Home() {
   const [report, setReport] = useState<ReportData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -14,6 +18,9 @@ export default function Home() {
     fetchReport();
   }, []);
 
+  /**
+   * 최신 리포트 데이터를 API로부터 가져옵니다.
+   */
   const fetchReport = async () => {
     try {
       setLoading(true);
@@ -26,11 +33,14 @@ export default function Home() {
     }
   };
 
+  /**
+   * 리포트 생성을 수동으로 트리거하고, 일정 시간 후 데이터를 새로고침합니다.
+   */
   const handleRefresh = async () => {
     setRefreshing(true);
     try {
       await api.triggerReport();
-      // Wait a bit for generation (naive polling would be better, but simple delay for UI feedback)
+      // 생성 대기 (더 나은 방법은 폴링이지만, UI 피드백을 위해 단순히 지연시킴)
       setTimeout(() => {
         fetchReport();
         setRefreshing(false);
@@ -48,11 +58,11 @@ export default function Home() {
     );
   }
 
-  // Process data for charts
-  // Limit to last 50 points for readability if needed
+  // 차트 데이터 처리
+  // 가독성을 위해 필요하다면 최근 50개 포인트로 제한
   const silverData = report?.market_data?.Silver?.slice(-50) || [];
   
-  // Format Chart Data
+  // 차트 데이터 포맷팅
   const chartData = silverData.map((item: any) => ({
     time: new Date(item.Datetime || item.Date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     price: item.Close
@@ -200,6 +210,9 @@ export default function Home() {
   );
 }
 
+/**
+ * 배열의 마지막 데이터 포인트에서 종가(Close)를 가져와 포맷팅합니다.
+ */
 function dataLastPrice(data: any[] | undefined) {
     if (!data || data.length === 0) return "N/A";
     const last = data[data.length - 1];
