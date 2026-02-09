@@ -83,15 +83,12 @@ export default function Home() {
           </div>
           <button 
             onClick={handleRefresh}
-            disabled={refreshing}
-            className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all ${
-              refreshing 
-                ? 'bg-blue-100 text-blue-400 cursor-not-allowed' 
-                : 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-200'
-            }`}
+            disabled={true} // 정적 사이트에서는 비활성화
+            className={`flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all bg-gray-300 text-gray-500 cursor-not-allowed`}
+            title="GitHub Actions에 의해 자동 업데이트됩니다."
           >
-            <RefreshCw className={`w-5 h-5 ${refreshing ? 'animate-spin' : ''}`} />
-            {refreshing ? 'Analyzing...' : 'Refresh Analysis'}
+            <RefreshCw className={`w-5 h-5`} />
+            Auto Update via GitHub Actions
           </button>
         </header>
 
