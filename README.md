@@ -23,6 +23,7 @@
 3. 의존성을 설치합니다: `pip install -r requirements.txt` (루트 또는 backend 내)
 4. `.env` 파일을 설정합니다.
 5. 서버 실행:
+
    ```bash
    python backend/main.py
    ```
@@ -32,6 +33,7 @@
 1. `frontend` 디렉토리로 이동합니다.
 2. 의존성을 설치합니다: `npm install`
 3. 개발 서버 실행:
+
    ```bash
    npm run dev
    ```
@@ -40,7 +42,7 @@
 
 - **데이터 수집**: Yahoo Finance, Tavily News, YouTube(예정)
 - **AI 분석**: Google Gemini 모델을 사용한 낙관적/비관적 리포트 생성
-- **시각화**: Recharts를 이용한 가격 차트 및 리포트 대시보드
+- **시각화**: Lightweight Charts를 이용한 캔들스틱 차트 및 리포트 대시보드
 
 ## 라이선스
 

@@ -1,3 +1,8 @@
+"""
+Gemini AI 모델에 전달할 프롬프트 템플릿을 정의하는 모듈입니다.
+낙관적(Bullish) 리포트와 비관적(Bearish) 리포트 생성을 위한 템플릿을 포함합니다.
+"""
+
 BULLISH_PROMPT_TEMPLATE = """
 System Instruction:
 You are an expert investment analyst specializing in Silver (SLV), Gold, and Bitcoin.

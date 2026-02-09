@@ -3,7 +3,14 @@
 import { createChart, ColorType, IChartApi, ISeriesApi, CandlestickData, Time } from 'lightweight-charts';
 import React, { useEffect, useRef } from 'react';
 
+/**
+ * 차트 컴포넌트의 Props 인터페이스입니다.
+ */
 export interface ChartProps {
+  /** 
+   * 차트에 표시할 데이터 배열입니다.
+   * 시간(time)과 시가(open), 고가(high), 저가(low), 종가(close)를 포함해야 합니다.
+   */
   data: {
     time: string | number; // YYYY-MM-DD or Unix Timestamp
     open: number;
@@ -11,6 +18,9 @@ export interface ChartProps {
     low: number;
     close: number;
   }[];
+  /**
+   * 차트의 색상 설정 옵션입니다.
+   */
   colors?: {
     backgroundColor?: string;
     lineColor?: string;
@@ -20,6 +30,12 @@ export interface ChartProps {
   };
 }
 
+/**
+ * Lightweight Charts를 사용하여 캔들스틱 차트를 렌더링하는 컴포넌트입니다.
+ * 
+ * @param props {@link ChartProps} 차트 데이터 및 색상 설정
+ * @returns 캔들스틱 차트 요소를 포함하는 div
+ */
 export const CandlestickChart = (props: ChartProps) => {
   const {
     data,
