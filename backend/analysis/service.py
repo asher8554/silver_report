@@ -13,8 +13,8 @@ class AnalysisService:
             raise ValueError("Gemini API Key is required")
         
         genai.configure(api_key=api_key)
-        # gemini-1.5-flash가 일부 환경(v1beta)에서 404 에러를 발생시킬 수 있으므로 안정적인 gemini-pro 사용
-        self.model = genai.GenerativeModel('gemini-pro')
+        # gemini-pro가 deprecated 되었거나 404 에러 발생 시 gemini-1.5-flash 사용
+        self.model = genai.GenerativeModel('gemini-1.5-flash')
 
     async def generate_report(self, market_data: dict, news_data: list, youtube_data: list, report_type: str = "bullish") -> str:
         """
