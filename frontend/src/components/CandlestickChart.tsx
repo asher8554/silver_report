@@ -82,7 +82,8 @@ export const CandlestickChart = (props: ChartProps) => {
 
     chartRef.current = chart;
 
-    const candlestickSeries = (chart as any).addCandlestickSeries({
+    const candlestickSeries = (chart as any).addSeries({
+      type: 'Candlestick',
       upColor: '#26a69a', 
       downColor: '#ef5350', 
       borderVisible: false, 
