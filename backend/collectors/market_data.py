@@ -33,6 +33,9 @@ def collect_market_data(period="7d", interval="1h"):
                 if date_col in df.columns:
                     df[date_col] = df[date_col].astype(str)
                 
+                # NaN 값을 None으로 변환 (JSON 표준 호환을 위해)
+                df = df.where(pd.notnull(df), None)
+
                 data[name] = df.to_dict(orient='records')
             else:
                 print(f"Warning: No data found for {name}")

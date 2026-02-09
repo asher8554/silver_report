@@ -125,13 +125,24 @@ export default function Home() {
                   />
                 </LineChart>
               </ResponsiveContainer> */}
-              <CandlestickChart data={silverData.map((d: AssetData) => ({
-                time: new Date(d.Datetime || d.Date || '').getTime() / 1000, // Unix timestamp (seconds)
-                open: d.Open,
-                high: d.High,
-                low: d.Low,
-                close: d.Close
-              }))} />
+              <CandlestickChart data={silverData
+                .map((d: AssetData) => {
+                  const timeStr = d.Datetime || d.Date;
+                  if (!timeStr) return null;
+                  const time = new Date(timeStr).getTime() / 1000;
+                  if (isNaN(time)) return null;
+                  if (d.Open == null || d.High == null || d.Low == null || d.Close == null) return null;
+                  
+                  return {
+                    time, // Unix timestamp (seconds)
+                    open: d.Open,
+                    high: d.High,
+                    low: d.Low,
+                    close: d.Close
+                  };
+                })
+                .filter((item): item is NonNullable<typeof item> => item !== null)
+              } />
             </div>
           </div>
 
