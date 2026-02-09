@@ -1,9 +1,15 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { api, ReportData } from '@/lib/api';
+import { api, ReportData, AssetData } from '@/lib/api';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { ArrowUpCircle, ArrowDownCircle, RefreshCw, TrendingUp, TrendingDown, Clock } from 'lucide-react';
+import dynamic from 'next/dynamic';
+
+const CandlestickChart = dynamic(
+  () => import('@/components/CandlestickChart').then((mod) => mod.CandlestickChart),
+  { ssr: false }
+);
 
 /**
  * 실버 리포트의 메인 페이지 컴포넌트입니다.
@@ -63,8 +69,8 @@ export default function Home() {
   const silverData = report?.market_data?.Silver?.slice(-50) || [];
   
   // 차트 데이터 포맷팅
-  const chartData = silverData.map((item: any) => ({
-    time: new Date(item.Datetime || item.Date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+  const chartData = silverData.map((item) => ({
+    time: new Date(item.Datetime || item.Date || '').toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
     price: item.Close
   }));
 
@@ -101,7 +107,7 @@ export default function Home() {
               Silver Price Trend (7d)
             </h2>
             <div className="h-[300px] w-full">
-              <ResponsiveContainer width="100%" height="100%">
+              {/* <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={chartData}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
                   <XAxis dataKey="time" tick={{fontSize: 12, fill: '#9ca3af'}} axisLine={false} tickLine={false} />
@@ -118,7 +124,14 @@ export default function Home() {
                     activeDot={{r: 6, strokeWidth: 0}}
                   />
                 </LineChart>
-              </ResponsiveContainer>
+              </ResponsiveContainer> */}
+              <CandlestickChart data={silverData.map((d: AssetData) => ({
+                time: new Date(d.Datetime || d.Date || '').getTime() / 1000, // Unix timestamp (seconds)
+                open: d.Open,
+                high: d.High,
+                low: d.Low,
+                close: d.Close
+              }))} />
             </div>
           </div>
 

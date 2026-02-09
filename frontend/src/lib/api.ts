@@ -4,14 +4,24 @@ import axios from "axios";
 const BASE_PATH = "/silver_report";
 const DATA_URL = `${BASE_PATH}/data.json`;
 
+export interface AssetData {
+  Datetime?: string;
+  Date?: string;
+  Open: number;
+  High: number;
+  Low: number;
+  Close: number;
+  Volume?: number;
+}
+
 /**
  * 시장 데이터 인터페이스
  */
 export interface MarketData {
-  Silver: any[];
-  Gold: any[];
-  Bitcoin: any[];
-  USD_Index: any[];
+  Silver: AssetData[];
+  Gold: AssetData[];
+  Bitcoin: AssetData[];
+  USD_Index: AssetData[];
 }
 
 /**
