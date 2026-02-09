@@ -11,3 +11,4 @@ backend/__pycache__/
 venv/
 .idea/
 .vscode/
+frontend/public/data.json
