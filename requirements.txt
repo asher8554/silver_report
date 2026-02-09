@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+yfinance
+pandas
+google-generativeai
+apscheduler
+python-dotenv
+requests
+youtube-transcript-api
+tavily-python
