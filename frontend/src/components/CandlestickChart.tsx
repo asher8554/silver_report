@@ -1,6 +1,6 @@
 "use client";
 
-import { createChart, ColorType, IChartApi, ISeriesApi, CandlestickData, Time } from 'lightweight-charts';
+import { createChart, ColorType, IChartApi, ISeriesApi, CandlestickData, Time, CandlestickSeries } from 'lightweight-charts';
 import React, { useEffect, useRef } from 'react';
 
 /**
@@ -12,7 +12,7 @@ export interface ChartProps {
    * 시간(time)과 시가(open), 고가(high), 저가(low), 종가(close)를 포함해야 합니다.
    */
   data: {
-    time: string | number; // YYYY-MM-DD or Unix Timestamp
+    time: string | number; // YYYY-MM-DD 또는 Unix 타임스탬프
     open: number;
     high: number;
     low: number;
@@ -76,14 +76,13 @@ export const CandlestickChart = (props: ChartProps) => {
         secondsVisible: false,
       },
       crosshair: {
-        mode: 1, // Magnet mode
+        mode: 1, // 자석 모드 (Magnet mode)
       }
     });
 
     chartRef.current = chart;
 
-    const candlestickSeries = (chart as any).addSeries({
-      type: 'Candlestick',
+    const candlestickSeries = chart.addSeries(CandlestickSeries, {
       upColor: '#26a69a', 
       downColor: '#ef5350', 
       borderVisible: false, 
@@ -91,31 +90,58 @@ export const CandlestickChart = (props: ChartProps) => {
       wickDownColor: '#ef5350',
     });
 
-    // 데이터 타입 변환 및 정렬
-    // lightweight-charts는 시간순 정렬된 데이터를 요구함
-    const sortedData = [...data]
-      .sort((a, b) => {
-        const timeA = typeof a.time === 'string' ? new Date(a.time).getTime() : a.time;
-        const timeB = typeof b.time === 'string' ? new Date(b.time).getTime() : b.time;
-        return timeA - timeB;
+    // 데이터 유효성 검사 및 정제
+    const validData = data
+      .map(item => {
+        const timeVal = typeof item.time === 'string' 
+          ? new Date(item.time).getTime() / 1000 // Unix 타임스탬프(초)로 변환
+          : item.time;
+        
+        return {
+          ...item,
+          time: timeVal as Time,
+          // 가격 데이터가 유효한 숫자인지 확인
+          open: Number(item.open),
+          high: Number(item.high),
+          low: Number(item.low),
+          close: Number(item.close),
+        };
       })
-      .map(item => ({
-        ...item,
-        time: (typeof item.time === 'string' ? item.time : item.time) as Time
-      }));
+      .filter(item => 
+        !isNaN(Number(item.time)) && 
+        !isNaN(item.open) && 
+        !isNaN(item.high) && 
+        !isNaN(item.low) && 
+        !isNaN(item.close)
+      )
+      .sort((a, b) => (a.time as number) - (b.time as number));
 
-    // 중복 시간 제거 (마지막 데이터 유지)
-    const uniqueData = sortedData.filter((item, index, self) => 
-      index === self.findIndex((t) => (
-        t.time === item.time
-      ))
-    );
+    // 시간 기준 중복 제거
+    const uniqueData: CandlestickData<Time>[] = [];
+    const seenTimes = new Set<number>();
 
-    candlestickSeries.setData(uniqueData as CandlestickData<Time>[]);
+    for (const item of validData) {
+      const timeNum = item.time as number;
+      if (!seenTimes.has(timeNum)) {
+        seenTimes.add(timeNum);
+        uniqueData.push(item);
+      }
+    }
+
+    if (uniqueData.length === 0) {
+      console.warn('Chart data is empty after validation');
+      return;
+    }
+
+    try {
+      candlestickSeries.setData(uniqueData);
+    } catch (err) {
+      console.error('Error setting chart data:', err);
+    }
 
     window.addEventListener('resize', handleResize);
 
-    // Initial fit
+    // 초기 차트 범위 설정
     chart.timeScale().fitContent();
 
     return () => {
