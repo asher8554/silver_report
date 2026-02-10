@@ -13,8 +13,14 @@ class AnalysisService:
             raise ValueError("Gemini API Key is required")
         
         genai.configure(api_key=api_key)
-        # 사용 가능한 모델 목록 (우선순위 순)
-        self.models = ['gemini-1.5-flash', 'gemini-1.5-pro']
+        # 사용 가능한 모델 목록 (더 많은 변형 포함)
+        self.models = [
+            'gemini-1.5-flash', 
+            'gemini-1.5-flash-latest',
+            'gemini-1.5-pro',
+            'gemini-1.5-pro-latest',
+            'gemini-2.0-flash-exp'
+        ]
         self.current_model_name = self.models[0]
         self.model = genai.GenerativeModel(self.current_model_name)
 
@@ -38,8 +44,7 @@ class AnalysisService:
             youtube_data=str(youtube_data)[:3000]
         )
 
-        last_error = None
-
+        errors = []
         for model_name in self.models:
             try:
                 logger.info(f"Generating {report_type} report using {model_name}...")
@@ -48,11 +53,12 @@ class AnalysisService:
                 return response.text
             except Exception as e:
                 logger.warning(f"Failed with {model_name}: {e}")
-                last_error = e
+                errors.append(f"{model_name}: {str(e)}")
                 continue
         
-        logger.error(f"All models failed. Last error: {last_error}")
-        return f"Error generation report (All models failed): {last_error}"
+        error_msg = " | ".join(errors)
+        logger.error(f"All models failed. Errors: {error_msg}")
+        return f"Error generating report (All models failed): {error_msg}"
 
 # 싱글톤 인스턴스 플레이스홀더
 analysis_service = None
