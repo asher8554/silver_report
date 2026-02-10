@@ -185,7 +185,7 @@ export default function Home() {
               <h2 className="text-2xl font-bold text-blue-900 mb-4 flex items-center gap-3">
                 <ArrowUpCircle className="w-8 h-8 text-blue-600" />
                 bullish Report
-                <span className="text-xs font-normal px-2 py-1 bg-blue-200 text-blue-800 rounded-full">Optimistic</span>
+                <span className="text-xs font-normal px-2 py-1 bg-blue-200 text-blue-800 rounded-full">낙관론</span>
               </h2>
               <div className="prose prose-blue max-w-none text-gray-700 whitespace-pre-line">
                 {report?.bullish_report}
@@ -200,7 +200,7 @@ export default function Home() {
               <h2 className="text-2xl font-bold text-red-900 mb-4 flex items-center gap-3">
                 <ArrowDownCircle className="w-8 h-8 text-red-600" />
                 Bearish Report
-                <span className="text-xs font-normal px-2 py-1 bg-red-200 text-red-800 rounded-full">Pessimistic</span>
+                <span className="text-xs font-normal px-2 py-1 bg-red-200 text-red-800 rounded-full">비관론</span>
               </h2>
               <div className="prose prose-red max-w-none text-gray-700 whitespace-pre-line">
                 {report?.bearish_report}

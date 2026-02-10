@@ -14,7 +14,7 @@ class AnalysisService:
         
         genai.configure(api_key=api_key)
         # 사용 가능한 모델 목록 (우선순위 순)
-        self.models = ['gemini-1.5-flash', 'gemini-1.5-pro', 'gemini-pro']
+        self.models = ['gemini-1.5-flash', 'gemini-1.5-pro']
         self.current_model_name = self.models[0]
         self.model = genai.GenerativeModel(self.current_model_name)
 
