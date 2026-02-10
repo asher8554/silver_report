@@ -178,13 +178,13 @@ export default function Home() {
         {/* AI Reports */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           
-          {/* Bullish Report */}
+          {/* 낙관적인 보고서 */}
           <div className="bg-gradient-to-br from-white to-blue-50 p-8 rounded-2xl shadow-sm border border-blue-100 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-blue-100 rounded-full blur-3xl -mr-16 -mt-16 opcaity-50"></div>
             <div className="relative">
               <h2 className="text-2xl font-bold text-blue-900 mb-4 flex items-center gap-3">
                 <ArrowUpCircle className="w-8 h-8 text-blue-600" />
-                bullish Report
+                낙관적인 보고서
                 <span className="text-xs font-normal px-2 py-1 bg-blue-200 text-blue-800 rounded-full">낙관론</span>
               </h2>
               <div className="prose prose-blue max-w-none text-gray-700 whitespace-pre-line">
@@ -193,13 +193,13 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Bearish Report */}
+          {/* 비관적인 보고서 */}
           <div className="bg-gradient-to-br from-white to-red-50 p-8 rounded-2xl shadow-sm border border-red-100 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-32 h-32 bg-red-100 rounded-full blur-3xl -mr-16 -mt-16 opcaity-50"></div>
             <div className="relative">
               <h2 className="text-2xl font-bold text-red-900 mb-4 flex items-center gap-3">
                 <ArrowDownCircle className="w-8 h-8 text-red-600" />
-                Bearish Report
+                비관적인 보고서
                 <span className="text-xs font-normal px-2 py-1 bg-red-200 text-red-800 rounded-full">비관론</span>
               </h2>
               <div className="prose prose-red max-w-none text-gray-700 whitespace-pre-line">
